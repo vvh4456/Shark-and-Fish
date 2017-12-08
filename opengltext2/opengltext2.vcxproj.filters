@@ -24,19 +24,10 @@
     <ClCompile Include="ZGraph.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>threelib</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zw.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Psi.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\myinclude\stb_image.h">
-      <Filter>threelib</Filter>
     </ClInclude>
     <ClInclude Include="ZGraph.h">
       <Filter>源文件</Filter>

@@ -1,8 +1,8 @@
 #ifndef MAIN
 #define MAIN
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+#include "glm/glm.hpp"
 #include <iostream>
 #include "ZGraph.h"
 void processInput(GLFWwindow *window);
@@ -23,7 +23,7 @@ int drawSea(ZGraph& a) {
 	int i,j;
 	for (i = 0; i < seaH; i++) {
 		for (j = 0; j < seaW;j++) {
-			if (colors[seaMap[i*seaH + j] % 3][2] == 255)continue;
+			//if (colors[seaMap[i*seaH + j] % 3][2] == 255)continue;
 			a.DrewRect(
 				(i+1)/(float)seaH*2-1, (j+1)/(float)seaW*2-1 ,
 				(i) / (float)seaH * 2 - 1, (j) / (float)seaW*2-1 ,
@@ -55,12 +55,9 @@ int main()
 	while (!glfwWindowShouldClose(test.getWindowID()))
 	{
 		processInput(test.getWindowID());
-		i=(i++)%seaH+1;
-		setfish((i*23)%seaH+1,i%seaW+1,i%2+1);
-		//test.clear();
 		drawSea(test);
 		test.done();
-		Sleep(100);
+		Sleep(1000);
 	}
 	return 0;
 }

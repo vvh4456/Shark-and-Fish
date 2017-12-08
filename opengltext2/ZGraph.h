@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 //#include <gl/GL.h>
 //一旦创建这个类的实例就表示使用opengl来创建窗口等
 class ZGraph_gl
