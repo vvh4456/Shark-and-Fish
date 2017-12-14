@@ -19,3 +19,10 @@
 	*.idb
 	*.obj
 	*.ilk
+	*.vcxproj.user
+	*.vcxproj.filters
+	*.vcxproj
+	Release/*
+	Debug/*
+	.vs/*
+	*.sln
