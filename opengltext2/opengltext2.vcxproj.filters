@@ -21,16 +21,30 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="GLWINDOWS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="ZGraph.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="glad\glad.c">
+      <Filter>threelib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="zw.h">
+    <ClInclude Include="GLWINDOWS.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ZGraph.h">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="glad\glad.h">
+      <Filter>threelib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="glfwCallbackFunction.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>

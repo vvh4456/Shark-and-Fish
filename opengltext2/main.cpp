@@ -1,108 +1,98 @@
-#ifndef MAIN
-#define MAIN
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
 #include <iostream>
+#include "glad/glad.h"
+#include "glfw/glfw3.h"
+#include "glm/glm.hpp"
+
 #include "ZGraph.h"
-void processInput(GLFWwindow *window);
-
-// settings
-int k = 1;//it is no mean
-unsigned char colors[3][3] = { {0,0,255} ,{0,255,0} ,{255,0,0} };
-int seanceH;
-int seanceW;
-char* seaMap = nullptr;
-int seaH;
-int seaW;
-int setfish(int h,int w,int kind);
-int setSeaHW(int h, int w);
-int NextBout();
-int getNeighbor(int h,int w,char*);
-int drawSea(ZGraph& a) {
-	int i,j;
-	for (i = 0; i < seaH; i++) {
-		for (j = 0; j < seaW;j++) {
-			//if (colors[seaMap[i*seaH + j] % 3][2] == 255)continue;
-			a.DrewRect(
-				(i+1)/(float)seaH*2-1, (j+1)/(float)seaW*2-1 ,
-				(i) / (float)seaH * 2 - 1, (j) / (float)seaW*2-1 ,
-				colors[seaMap[i*seaH+j]%3][0],
-				colors[seaMap[i*seaH + j]%3][1],
-				colors[seaMap[i*seaH + j]%3][2]
-				);
-		}
-	}
-	return 1;
-}
-//map (seaH,seaW)->(seanceH,seanceW)->(-1,1)
-
+#include "GLWINDOWS.H"
+//#pragma comment(lib,"glfw3.lib")
 int main()
 {
-	setSeaHW(20,20);
-	int i = 1;
-	setfish(1,1,2);
-	ZGraph test;
-	test.pri();
-	int counter=0;
-
-	test.clear();
-	test.done();
-	test.clear();
-	test.done();
-	//twice because it have two buffer
-
-	while (!glfwWindowShouldClose(test.getWindowID()))
+	GLWINDOWS testa, testb;
+	ZGraph::Init();
+	ZGraph testc, testd;
+	testc.useThisWindow(testa.createWindow("hello"));
+	//testd.useThisWindow(testb.createWindow("windows"));
+	//abort();
+	testa.setKeyCallBack();
+	while (TRUE)
 	{
-		processInput(test.getWindowID());
-		drawSea(test);
-		test.done();
-		Sleep(1000);
+		if (glfwWindowShouldClose(testa.getWindowID())) { std::cout << "should close"; break; }
+		//testa.processInput();
+		testc.clear();
+		testc.DrewRect(-0.2,-0.4,0.6,0.7,0,100,200);
+		testc.done();
+		Sleep(500);
 	}
+	glfwTerminate();
 	return 0;
 }
 
-void processInput(GLFWwindow *window)
+
+
+
+//{
+//	glfwInit();
+//	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//
+//#ifdef __APPLE__
+//	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+//#endif
+//
+//														 // glfw window creation
+//														 // --------------------
+//	GLFWwindow* window = glfwCreateWindow(800, 640, "LearnOpenGL", NULL, NULL);
+//	if (window == NULL)
+//	{
+//		std::cout << "Failed to create GLFW window" << std::endl;
+//		glfwTerminate();
+//		return -1;
+//	}
+//	glfwMakeContextCurrent(window);
+//	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+//
+//	// glad: load all OpenGL function pointers
+//	// ---------------------------------------
+//	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+//	{
+//		std::cout << "Failed to initialize GLAD" << std::endl;
+//		return -1;
+//	}
+//
+//	// render loop
+//	// -----------
+//	while (!glfwWindowShouldClose(window))
+//	{
+//		// input
+//		// -----
+//		//processInput(window);
+//
+//		// render
+//		// ------
+//		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+//		glClear(GL_COLOR_BUFFER_BIT);
+//
+//		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+//		// -------------------------------------------------------------------------------
+//		glfwSwapBuffers(window);
+//		glfwPollEvents();
+//	}
+//
+//	// glfw: terminate, clearing all previously allocated GLFW resources.
+//	// ------------------------------------------------------------------
+//	glfwTerminate();
+//	return 0;
+//}
+//	
+void cursor_position_callback(GLFWwindow* window, double x, double y)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-	//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)k=0;
-	if (glfwGetKey(window,GLFW_KEY_A)==GLFW_PRESS)k=0;
+	float xpos, ypos;
+	int width = 800;
+	int height = 640;
+	printf("Mouse position move to [%d:%d]", int(x), int(y));
+	xpos = float((x - width / 2) / width) * 2;
+	ypos = float(0 - (y - height / 2) / height) * 2;
+	return;
 }
-
-int setfish(int h, int w, int kind)
-{
-	seaMap[seaH*(h-1)+w-1] = (char)kind;
-	return 1;
-}
-
-int setSeaHW(int h, int w)
-{
-	if (seaMap != nullptr) {
-	//to do delete;
-	};
-	seaMap =new char[h*w];
-	memset(seaMap,0,sizeof(char)*h*w);
-	seaH = h;
-	seaW = w;
-	return 1;
-}
-
-int NextBout()
-{
-	
-
-
-	return 0;
-}
-
-int getNeighbor(int h, int w, char *)
-{
-
-
-
-
-	return 0;
-}
-
-#endif

@@ -1,3 +1,4 @@
 ﻿  main.cpp
+f:\workspace\opengltext2\opengltext2\main.cpp(23): warning C4305: “参数”: 从“double”到“float”截断
   opengltext2.vcxproj -> F:\WorkSpace\opengltext2\Debug\opengltext2.exe
   opengltext2.vcxproj -> F:\WorkSpace\opengltext2\Debug\opengltext2.pdb (Full PDB)

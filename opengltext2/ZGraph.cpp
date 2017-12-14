@@ -1,15 +1,18 @@
 #include "ZGraph.h"
-//#include <glad/glad.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+
 #include <iostream>
+#include <glad/glad.h>
+#include "glfw/glfw3.h"
+#include "glm/glm.hpp"
+
+
+
 
 GLFWwindow* window = nullptr;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+static int isrun = 0;
+void ZGraph_gl::Init() {
 
-void InitGLFW() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -18,17 +21,11 @@ void InitGLFW() {
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-
-};
 #ifdef __glad_h_
-int InitGLAD() {
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
-}
 #endif
+	
+};
+
 ZGraph_gl::ZGraph_gl()
 {
 
@@ -84,11 +81,11 @@ int RectEBO[] = {
 	1,2,3
 };
 
-int LineID;
-int RectID;
+static int LineID;
+static int RectID;
 
-int LineShader;
-int RectShader;
+static int LineShader;
+static int RectShader;
 
 
 
@@ -96,22 +93,16 @@ ZGraph_gl::~ZGraph_gl()
 {
 
 }
-//这并不是纯粹的创建窗口，所以别用第二次
-void ZGraph_gl::createWindow(const std::string WinName, int SCR_WIDTH =800 ,int SCR_HEIGHT=600)
+
+void ZGraph_gl::useThisWindow(GLFWwindow* window)
 {
-	InitGLFW();
-	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, WinName.c_str(), NULL, NULL);
-	if (window == NULL)
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return ;
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return;
 	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-#ifdef __glad_h_
-	InitGLAD();
-#endif
+	if (isrun == 0) { privatefun(); isrun++; }
+	this->window = window;
 }
 
 int ZGraph_gl::createProgram()
@@ -129,16 +120,13 @@ int ZGraph_gl::createShader(const std::string sharderSource, GLenum g)
 	int success;
 	char infoLog[512];
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	//std::cout << "run on here" << __LINE__ << std::endl;
 	glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 	if (!success)
 	{
-		std::cout << "run on here" << __LINE__ << std::endl;
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 		return 0;
 	}
-	//shaderList.push_back(vertexShader);
 	return vertexShader;
 }
 
@@ -181,7 +169,7 @@ bool ZGraph_gl::useProgram(int program)
 	return true;
 }
 
-void ZGraph_gl::setFloat(int program, const std::string & name, float value) const
+void ZGraph_gl::setFloat(int program, const std::string & name, float value)
 {
 	glUniform1f(glGetUniformLocation(program, name.c_str()), value);
 }
@@ -190,7 +178,6 @@ int ZGraph_gl::CreateVAO()
 {
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
-
 	glBindVertexArray(VAO);
 	return VAO;
 }
@@ -204,7 +191,7 @@ int ZGraph_gl::setVBO(float *vertices, int n)
 	return 0;
 }
 
-int ZGraph_gl::setEVO(int *indices, int n)
+int ZGraph_gl::setEBO(int *indices, int n, int location=0)
 {
 	unsigned int EBO;
 	glGenBuffers(1, &EBO);
@@ -212,14 +199,9 @@ int ZGraph_gl::setEVO(int *indices, int n)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*n, indices, GL_STATIC_DRAW);
 	//______________________i know it should'n on here but i am so l
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(location);
 	//________________________
 	return 0;
-}
-
-GLFWwindow * ZGraph_gl::getWindowID()const
-{
-	return window;
 }
 
 int ZGraph_gl::DrewLine(float x, float y, float x2, float y2)
@@ -267,14 +249,13 @@ int ZGraph_gl::done()
 	return 0;
 }
 
-int ZGraph_gl::pri()
+int ZGraph_gl::privatefun()
 {
-	createWindow("SHA");
 	int s2; int s1;
 	LineShader = createProgram();
-	 s1=createShader(LineShaderSource,GL_VERTEX_SHADER);
+	s1=createShader(LineShaderSource,GL_VERTEX_SHADER);
 	
-	 s2 = createShader(fragmentShaderSource,GL_FRAGMENT_SHADER);
+	s2 = createShader(fragmentShaderSource,GL_FRAGMENT_SHADER);
 	attachShader(LineShader, s1);
 	attachShader(LineShader, s2);
 	linkProgram(LineShader);
@@ -293,20 +274,16 @@ int ZGraph_gl::pri()
 	
 	LineID = CreateVAO();
 	setVBO(ComVector,12);
-	setEVO(LineEBO,2);
+	setEBO(LineEBO,2);
 
 	RectID = CreateVAO();
 	setVBO(ComVector, 12);
-	setEVO(RectEBO, 6);
+	setEBO(RectEBO, 6);
 
 
 	return 0;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
 /*
 
 const char *vertexShaderSource = 

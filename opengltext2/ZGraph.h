@@ -2,33 +2,34 @@
 #include <string>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-//#include <gl/GL.h>
-//一旦创建这个类的实例就表示使用opengl来创建窗口等
 class ZGraph_gl
 {	
+	GLFWwindow* window;
+private:
+	static int createProgram();
+	static int createShader(std::string,GLenum);
+	static int deleteShader(int);
+	static int attachShader(int program,int shader);
+	static int linkProgram(int program);
+	static int deleteProgram(int program);
+	static bool useProgram(int program);
+	static void setFloat(int program, const std::string &name, float value);
+	static int CreateVAO();
+	static int setVBO(float*,int);
+	static int setEBO(int *,int,int);
+	static int useVector(int VectorID);
+	
+	static int privatefun();
 public:
-
 	ZGraph_gl();
 	~ZGraph_gl();
-	void createWindow(std::string WinName,int,int);
-	int createProgram();
-	int createShader(std::string,GLenum);
-	int deleteShader(int);
-	int attachShader(int program,int shader);
-	int linkProgram(int program);
-	int deleteProgram(int program);
-	bool useProgram(int program);
-	void setFloat(int program, const std::string &name, float value) const;
-	int CreateVAO();
-	int setVBO(float*,int);
-	int setEVO(int *,int);
-	GLFWwindow* getWindowID()const;
-	int DrewLine(float x,float y,float x2,float y2);
+	static void Init();
+	void useThisWindow(GLFWwindow*);
+	static int clear();
+	int DrewLine(float x, float y, float x2, float y2);
 	int DrewRect(float x, float y, float x2, float y2, int a, int b, int g);
-	int useVector(int VectorID);
-	int clear();
 	int done();
-	int pri();
+	
 };
 
 #ifdef _WIN32
